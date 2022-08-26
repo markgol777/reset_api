@@ -41,12 +41,34 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.patch('/', (req, res) => {
+router.patch('/', async (req, res) => {
+    const subscriber = Subscriber.findById(req.params.id);
+    if (req.body.name != null) {
+        subscriber.name = req.body.name
+    }
 
+    if (req.body.subscribedToChannel != null) {
+        subscriber.subscribedToChannel = req.body.subscribedToChannel
+    }
+
+    try {
+        const updatedSubscriber = await subscriber.save();
+        res.json(updatedSubscriber);
+
+
+    } catch (err) {
+        res.status(clientErr).json(`${err.message}`)
+    }
 });
 
 router.delete('/:id', async (req, res) => {
-   
+    try {
+    const subscriber = await Subscriber.findById(req.params.id);
+    await subscriber.remove();
+    res.json({message: 'Deleted Subscriber'});
+   } catch (err) {
+    res.json({message: `${err}`});
+   }
 });
 
 module.exports = router;

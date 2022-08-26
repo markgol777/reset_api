@@ -1,4 +1,3 @@
-require('dotenv').config();
 //connecting env library
 const PORT = 3000;
 
